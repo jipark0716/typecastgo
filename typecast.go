@@ -211,7 +211,7 @@ func (this *TypeCast) Post(url string, requestJson interface{}, args ...bool) (r
  * text string
  * actorName string
  */
-func (this *TypeCast) Exec(text string, ...args string) (blob []byte, err error) {
+func (this *TypeCast) Exec(text string, args ...string) (blob []byte, err error) {
 	var ok bool
 	var ActorId string
 	ActorName := this.ActorName
