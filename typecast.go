@@ -207,11 +207,18 @@ func (this *TypeCast) Post(url string, requestJson interface{}, args ...bool) (r
 	return
 }
 
-func (this *TypeCast) Exec(text string) (blob []byte, err error) {
-	println("start")
+/**
+ * text string
+ * actorName string
+ */
+func (this *TypeCast) Exec(text string, ...args string) (blob []byte, err error) {
 	var ok bool
 	var ActorId string
-	if ActorId, ok = Actor[this.ActorName]; !ok {
+	ActorName := this.ActorName
+	if len(args) > 0 {
+		ActorName = args[0]
+	}
+	if ActorId, ok = Actor[ActorName]; !ok {
 		err = fmt.Errorf("undefind Actor")
 		return
 	}
