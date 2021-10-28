@@ -238,6 +238,7 @@ func (this *TypeCast) Exec(text string, args ...string) (blob []byte, err error)
 		return
 	}
 	var speakUrls interface{}
+	fmt.Printf("%#v\n", response)
 	if speakUrls, ok = response["result"].(map[string]interface{})["speak_urls"]; !ok {
 		err = fmt.Errorf("undefind speark_urls")
 		return
