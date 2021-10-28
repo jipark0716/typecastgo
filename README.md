@@ -6,6 +6,7 @@
 ```
 
 ### sample
+
 ```
 import (
     "github.com/jipark0716/typecastGo"
