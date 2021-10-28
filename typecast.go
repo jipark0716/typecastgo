@@ -197,7 +197,7 @@ func (this *TypeCast) Post(url string, requestJson interface{}, args ...bool) (r
 		return
 	}
 	jsonString, err := ioutil.ReadAll(response.Body)
-	// fmt.Printf("%s \n\n", string(jsonString))
+
 	defer response.Body.Close()
 	if err != nil {
 		return
@@ -238,7 +238,12 @@ func (this *TypeCast) Exec(text string, args ...string) (blob []byte, err error)
 		return
 	}
 	var speakUrls interface{}
-	fmt.Printf("%#v\n", response)
+
+	if speakUrls, ok = response["result"]; !ok {
+		err = fmt.Errorf("undefind speark_urls")
+		return
+	}
+
 	if speakUrls, ok = response["result"].(map[string]interface{})["speak_urls"]; !ok {
 		err = fmt.Errorf("undefind speark_urls")
 		return
