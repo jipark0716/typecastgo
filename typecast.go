@@ -1,4 +1,4 @@
-package typecastGo
+package main
 
 import (
 	"encoding/json"
@@ -25,6 +25,15 @@ var Actor map[string]string
 
 func init() {
 	Actor = map[string]string{
+		// 이젠 지원 안함
+		// "찬혁": "5c547545fcfee90007fed458",
+		// "의찬": "5c547545fcfee90007fed456",
+		//
+		// "트럼프": "5c3c52c9ea9791000747155b",
+		// "김정은": "5c3c52ca5827e00008dd7f35",
+		// "문재인":"5cf9ecb62cae6a0008b446af",
+		// "리춘희": "5d357d34ba9d2d0007195f9e",
+
 		"찬구": "5c547544fcfee90007fed455",
 		"주하": "5d01a52563338e00072b8c9c",
 		"카밀라": "5f8d7b0de146f10007b8042f",
@@ -61,7 +70,6 @@ func init() {
 		"상도": "5c789c337ad86500073a02ce",
 		"진혁": "5c3c52ca5827e00008dd7f36",
 		"민상": "5c3c52ca5827e00008dd7f38",
-		"찬혁": "5c547545fcfee90007fed458",
 		"지철": "5c789c33dabcfa0008b0a38f",
 		"수진": "5c3c52ca5827e00008dd7f3a",
 		"국희": "5c789c31dabcfa0008b0a38c",
@@ -75,16 +83,11 @@ func init() {
 		"강수정": "5e4f7a5da82e1f000aca31af",
 		"이승주": "5e4f7a5d716fd30009920721",
 		"주원": "5c547545fcfee90007fed459",
-		"의찬": "5c547545fcfee90007fed456",
 		"마크": "5e11db23b70e890009fb7ae7",
-		"트럼프": "5c3c52c9ea9791000747155b",
-		"김정은": "5c3c52ca5827e00008dd7f35",
-		"문재인":"5cf9ecb62cae6a0008b446af",
 		"신디": "5c547545168d0a0007f5cf14",
 		"현진": "5d01a522bb04140008a23f34",
 		"정원": "5d01a529bb04140008a23f36",
 		"성배": "5d01a52bbb04140008a23f37",
-		"리춘희": "5d357d34ba9d2d0007195f9e",
 		"하은": "5de781b108fd6b000882c58f",
 		"범수": "5c3c52cb5827e00008dd7f3b",
 	}
