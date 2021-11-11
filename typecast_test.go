@@ -1,4 +1,4 @@
-package typecast_test
+package typecastGo_test
 
 import (
 	"fmt"
