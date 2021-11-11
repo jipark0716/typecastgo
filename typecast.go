@@ -1,4 +1,4 @@
-package typecastGo
+package typecast
 
 import (
 	"encoding/json"
