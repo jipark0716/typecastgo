@@ -7,6 +7,7 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -63,7 +64,8 @@ type GoogleOauth2Response struct {
 	IdToken      string `json:"idToken"`
 	RefreshToken string `json:"refreshToken"`
 	ExpiresIn    string `json:"expiresIn"`
-	IsNewUser    bool   `json:"isNewUser"`
+	ExpiresAt    time.Time
+	IsNewUser    bool `json:"isNewUser"`
 }
 
 type TypecastExecuteRequest struct {
@@ -217,15 +219,31 @@ func (s *Session) Request(method string, endpoint string, data interface{}, head
 	return
 }
 
+func (s *Session) IsTokenExpired() bool {
+	return time.Now().After(s.Token.ExpiresAt)
+}
+
+func (s *Session) TokenRefresh() {
+	// @todo init 처음부터 하지 않고 Refresh Token 사용해서 토큰 갱신하기
+}
+
+func (s *Session) TokenHeader() map[string]string {
+	if !s.IsTokenExpired() {
+		s.TokenRefresh()
+	}
+
+	return map[string]string{
+		"Content-Type":  "application/json",
+		"Authorization": fmt.Sprintf("Bearer %s", s.Token.IdToken),
+	}
+}
+
 func (s *Session) RequestWithToken(method string, endpoint string, data interface{}) ([]byte, error) {
 	return s.Request(
 		method,
 		endpoint,
 		data,
-		map[string]string{
-			"Content-Type":  "application/json",
-			"Authorization": fmt.Sprintf("Bearer %s", s.Token.IdToken),
-		},
+		s.TokenHeader(),
 	)
 }
 
@@ -254,10 +272,7 @@ func (s *Session) RequestJsonWithToken(method string, endpoint string, data inte
 		method,
 		endpoint,
 		data,
-		map[string]string{
-			"Content-Type":  "application/json",
-			"Authorization": fmt.Sprintf("Bearer %s", s.Token.IdToken),
-		},
+		s.TokenHeader(),
 		response,
 	)
 }
@@ -313,6 +328,16 @@ func (s *Session) Connect(loginRequest *LoginRequest) (err error) {
 	}
 
 	s.Token, err = s.googleOauth2(typecastOauth2Response)
+	if err != nil {
+		return
+	}
+
+	expiresIn, err := strconv.Atoi(s.Token.ExpiresIn)
+	if err != nil {
+		return
+	}
+
+	s.Token.ExpiresAt = time.Now().Add(time.Second * time.Duration(expiresIn))
 
 	return
 }
