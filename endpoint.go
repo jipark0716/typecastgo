@@ -10,7 +10,10 @@ var (
 	EndpointGoogleSecurePassword = EndpointGoogleIdentitytoolkit + "verifyPassword?key=" + GoogleapiKey
 	EndpointGoogleSecureToken    = EndpointGoogleIdentitytoolkit + "verifyCustomToken?key=" + GoogleapiKey
 
-	EndpointTypecastApi = "https://typecast.ai/api/"
+	EndpointTypecastApi        = "https://typecast.ai/api/"
+	EndpointTypecastNoredirect = func(url string) string {
+		return url + "/no-redirect"
+	}
 
 	EndpointTypecastOauth     = EndpointTypecastApi + "auth-fb/custom-token"
 	EndpointTypecastSpeakPost = EndpointTypecastApi + "speak/batch/post"
