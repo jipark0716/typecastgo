@@ -18,4 +18,6 @@ var (
 	EndpointTypecastOauth     = EndpointTypecastApi + "auth-fb/custom-token"
 	EndpointTypecastSpeakPost = EndpointTypecastApi + "speak/batch/post"
 	EndpointTypecastSpeakGet  = EndpointTypecastApi + "speak/batch/get"
+
+	EndpointTypecast = EndpointTypecastApi + "actor"
 )

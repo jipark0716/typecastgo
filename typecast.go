@@ -24,6 +24,66 @@ type LoginRequest struct {
 	ReturnSecureToken bool   `json:"returnSecureToken"`
 }
 
+type TypecastActorResponse struct {
+	Result []TypecastActor `jsno:"result"`
+}
+
+type Dist struct {
+	CardImageUrl   string `json:"card_image_url"`
+	OriginImageUrl string `json:"origin_image_url"`
+	ResourceUrl    string `json:"resource_url"`
+}
+
+type Language struct {
+	Ko string `json:"ko"`
+	En string `json:"en"`
+}
+
+type TypecastActor struct {
+	ActorId             string             `json:"actor_id"`
+	ActorUrl            string             `json:"actor_url"`
+	AfxName             *string            `json:"afx_name"`
+	Age                 string             `json:"age"`
+	AudioLengthFactor   interface{}        `json:"audio_length_factor"`
+	AudioQuality        string             `json:"audio_quality"`
+	AudioUrl            string             `json:"audio_url"`
+	Bookmark            bool               `json:"bookmark"`
+	Dist                Dist               `json:"dist"`
+	EnhanceSpeaker      string             `json:"enhance_speaker"`
+	Flags               []string           `json:"flags"`
+	Hidden              bool               `json:"hidden"`
+	Ice                 int                `json:"ice"`
+	ImgUrl              string             `json:"img_url"`
+	Language            string             `json:"language"`
+	Name                Language           `json:"name"`
+	NumSpeeds           int                `json:"num_speeds"`
+	NumStyles           int                `json:"num_styles"`
+	Order               int                `json:"order"`
+	Price               string             `json:"price"`
+	Recent              bool               `json:"recent"`
+	RefActorId          *string            `json:"ref_actor_id"`
+	Rid                 string             `json:"rid"`
+	Roles               []string           `json:"roles"`
+	Score               int                `json:"score"`
+	Sex                 []string           `json:"sex"`
+	SpecPow             *string            `json:"spec_pow"`
+	SpeedParams         map[string]float32 `json:"speed_params"`
+	StyleLabel          interface{}        `json:"style_label"`
+	StyleLabelInfo      interface{}        `json:"style_label_info"`
+	StyleLabelV2        interface{}        `json:"style_label_v2"`
+	StyleLabelV2Info    interface{}        `json:"style_label_v2_info"`
+	StyleRecommendation interface{}        `json:"style_recommendation"`
+	StyleSource         string             `json:"style_source"`
+	Tag                 []string           `json:"tag"`
+	TagPrimary          interface{}        `json:"tag_primary"`
+	TagV2               interface{}        `json:"tag_v2"`
+	Tuning              []string           `json:"tuning"`
+	UniqueId            string             `json:"unique_id"`
+	Ssage               []string           `json:"usage"`
+	Version             string             `json:"version"`
+	VideoUrl            *string            `json:"video_url"`
+}
+
 type TypecastOauth2Request struct {
 	Token string `json:"token"`
 }
@@ -260,7 +320,11 @@ func (s *Session) RequestJson(method string, endpoint string, data interface{}, 
 
 	err = json.Unmarshal(responseBody, &response)
 	if err != nil {
-		err = fmt.Errorf("%+v\n%#v", err, string(responseBody))
+		responseString := string(responseBody)
+		if len(responseString) > 200 {
+			responseString = responseString[:200]
+		}
+		err = fmt.Errorf("%+v\n%#v", err, responseString)
 		return err
 	}
 
@@ -404,5 +468,18 @@ func (s *Session) Do(request []*TypecastExecuteRequest) (audio []byte, err error
 		nil,
 	)
 
+	return
+}
+
+func (s *Session) GetActors() (actors []TypecastActor, err error) {
+	var typecastActorResponse *TypecastActorResponse
+	err = s.RequestJsonWithToken(
+		"GET",
+		EndpointTypecast,
+		nil,
+		&typecastActorResponse,
+	)
+
+	actors = typecastActorResponse.Result
 	return
 }
