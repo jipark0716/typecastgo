@@ -1,4 +1,4 @@
-package typecast
+package typecastgo
 
 var GoogleapiKey = "AIzaSyBJN3ZYdzTmjyQJ-9TdpikbsZDT9JUAYFk"
 var GoogleApiVersion = "3"
