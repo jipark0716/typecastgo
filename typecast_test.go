@@ -1,20 +1,51 @@
-package typecast_test
+package typecast
 
 import (
 	"fmt"
+	"io/ioutil"
 	"testing"
-	"os"
-	."github.com/jipark0716/typecastGo"
 )
 
 func TestMain(t *testing.T) {
-	t.Error("1234")
-	typecast, _ := NewTypeCast(os.Getenv("TYPECAST_ID"), os.Getenv("TYPECAST_pw"))
-	for actor, _ := range Actor {
-		go func(actor string) {
-			blob, err := typecast.Exec("ㅋㅋ루삥뽕", actor)
-			fmt.Printf("%s:%#v:%#v\n", actor, err, len(blob))
-		}(actor)
+	typecast := NewSession()
+	err := typecast.Connect(&LoginRequest{
+		Email:             "email",
+		Password:          "password",
+		ReturnSecureToken: true,
+	})
+	if err != nil {
+		fmt.Printf("123%+v", err)
 	}
-	select{}
+
+	request := NewRequest()
+	request.Text = "ㅋㅋㄹ삥뽕"
+	request.ActorId = "5c547544fcfee90007fed455"
+	audio, err := typecast.Do([]*TypecastExecuteRequest{request})
+	if err != nil {
+		fmt.Printf("456%+v", err)
+	}
+
+	err = ioutil.WriteFile("./test.wav", audio, 0755)
+	if err != nil {
+		fmt.Printf("789%+v", err)
+	}
+
+}
+
+func TestActor(t *testing.T) {
+	typecast := NewSession()
+	err := typecast.Connect(&LoginRequest{
+		Email:             "email",
+		Password:          "password",
+		ReturnSecureToken: true,
+	})
+	if err != nil {
+		fmt.Printf("123%+v", err)
+	}
+
+	actors, err := typecast.GetActors()
+	if err != nil {
+		fmt.Printf("123%+v", err)
+	}
+	fmt.Printf("%#v\n", actors[0])
 }
