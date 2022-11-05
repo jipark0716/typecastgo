@@ -88,6 +88,17 @@ type TypecastOauth2Request struct {
 	Token string `json:"token"`
 }
 
+type TypecastRefreshRequest struct {
+	RefreshToken string    `json:"refresh_token"`
+	Type         GrantType `json:"grant_type"`
+}
+
+type GrantType string
+
+const (
+	GrantTypeRefresh GrantType = "refresh_token"
+)
+
 type GoogleOauth2Request struct {
 	Token             string `json:"token"`
 	ReturnSecureToken bool   `json:"returnSecureToken"`
@@ -117,6 +128,12 @@ type TypecastOauth2Result struct {
 
 type TypecastSpeakResponse struct {
 	Result string `json:"result`
+}
+
+type GoogleRefreshResponse struct {
+	IdToken      string `json:"id_token"`
+	RefreshToken string `json:"refresh_token"`
+	ExpiresIn    string `json:"expires_in"`
 }
 
 type GoogleOauth2Response struct {
@@ -284,11 +301,35 @@ func (s *Session) IsTokenExpired() bool {
 }
 
 func (s *Session) TokenRefresh() {
-	// @todo init 처음부터 하지 않고 Refresh Token 사용해서 토큰 갱신하기
+	var googleRefreshResponse GoogleRefreshResponse
+	err := s.RequestJson(
+		"POST",
+		EndpointRefreshToken,
+		&TypecastRefreshRequest{
+			RefreshToken: s.Token.RefreshToken,
+			Type:         GrantTypeRefresh,
+		},
+		nil,
+		&googleRefreshResponse,
+	)
+
+	if err != nil {
+		return
+	}
+
+	expiresIn, err := strconv.Atoi(googleRefreshResponse.ExpiresIn)
+	if err != nil {
+		return
+	}
+
+	s.Token.ExpiresAt = time.Now().Add(time.Second * time.Duration(expiresIn))
+	s.Token.RefreshToken = googleRefreshResponse.RefreshToken
+	s.Token.IdToken = googleRefreshResponse.IdToken
+	return
 }
 
 func (s *Session) TokenHeader() map[string]string {
-	if !s.IsTokenExpired() {
+	if s.IsTokenExpired() {
 		s.TokenRefresh()
 	}
 

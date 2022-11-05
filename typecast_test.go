@@ -3,18 +3,20 @@ package typecastgo
 import (
 	"fmt"
 	"io/ioutil"
+	"log"
+	"os"
 	"testing"
 )
 
 func TestMain(t *testing.T) {
 	typecast := NewSession()
 	err := typecast.Connect(&LoginRequest{
-		Email:             "email",
-		Password:          "password",
+		Email:             os.Getenv("TYPECAST_EMAIL"),
+		Password:          os.Getenv("TYPECAST_PASSWORD"),
 		ReturnSecureToken: true,
 	})
 	if err != nil {
-		fmt.Printf("123%+v", err)
+		log.Fatalf("123%+v", err)
 	}
 
 	request := NewRequest()
@@ -22,12 +24,12 @@ func TestMain(t *testing.T) {
 	request.ActorId = "5c547544fcfee90007fed455"
 	audio, err := typecast.Do([]*TypecastExecuteRequest{request})
 	if err != nil {
-		fmt.Printf("456%+v", err)
+		log.Fatalf("456%+v", err)
 	}
 
 	err = ioutil.WriteFile("./test.wav", audio, 0755)
 	if err != nil {
-		fmt.Printf("789%+v", err)
+		log.Fatalf("789%+v", err)
 	}
 
 }
@@ -35,17 +37,17 @@ func TestMain(t *testing.T) {
 func TestActor(t *testing.T) {
 	typecast := NewSession()
 	err := typecast.Connect(&LoginRequest{
-		Email:             "email",
-		Password:          "password",
+		Email:             os.Getenv("TYPECAST_EMAIL"),
+		Password:          os.Getenv("TYPECAST_PASSWORD"),
 		ReturnSecureToken: true,
 	})
 	if err != nil {
-		fmt.Printf("123%+v", err)
+		log.Fatalf("123%+v", err)
 	}
 
 	actors, err := typecast.GetActors()
 	if err != nil {
-		fmt.Printf("123%+v", err)
+		log.Fatalf("123%+v", err)
 	}
 	fmt.Printf("%#v\n", actors[0])
 }

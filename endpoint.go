@@ -1,14 +1,16 @@
 package typecastgo
 
 var GoogleapiKey = "AIzaSyBJN3ZYdzTmjyQJ-9TdpikbsZDT9JUAYFk"
-var GoogleApiVersion = "3"
+var GoogleApiVersion = "1"
 var TypecastGid = "f8ON1ZpeF0mDFjZTQlr9G"
 
 var (
-	EndpointGoogleIdentitytoolkit = "https://www.googleapis.com/identitytoolkit/v" + GoogleApiVersion + "/relyingparty/"
+	EndpointGoogleIdentitytoolkit = "https://identitytoolkit.googleapis.com/v" + GoogleApiVersion + "/"
+	EndpointGoogleSecure          = "https://securetoken.googleapis.com/v" + GoogleApiVersion + "/"
 
-	EndpointGoogleSecurePassword = EndpointGoogleIdentitytoolkit + "verifyPassword?key=" + GoogleapiKey
-	EndpointGoogleSecureToken    = EndpointGoogleIdentitytoolkit + "verifyCustomToken?key=" + GoogleapiKey
+	EndpointGoogleSecurePassword = EndpointGoogleIdentitytoolkit + "accounts:signInWithPassword?key=" + GoogleapiKey
+	EndpointGoogleSecureToken    = EndpointGoogleIdentitytoolkit + "accounts:signInWithCustomToken?key=" + GoogleapiKey
+	EndpointRefreshToken         = EndpointGoogleSecure + "token?key=" + GoogleapiKey
 
 	EndpointTypecastApi        = "https://typecast.ai/api/"
 	EndpointTypecastNoredirect = func(url string) string {
