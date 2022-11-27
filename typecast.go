@@ -167,7 +167,7 @@ type TypecastExecuteQuery struct {
 	Ttext             string  `json:"text"`
 	ActorId           string  `json:"actor_id"`
 	Lang              string  `json:"lang"`
-	MaxSeconds        int     `json:"max_seconds"`
+	MaxSeconds        float32 `json:"max_seconds"`
 	Actor             *string `json:"actor"`
 	Namespace         string  `json:"namespace"`
 	SpeakerDb         string  `json:"speaker_db"`
