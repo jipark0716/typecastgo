@@ -14,8 +14,9 @@ import (
 const STAUTS_DONE = "done"
 
 type Session struct {
-	Token  *GoogleOauth2Response
-	Client *http.Client
+	Token        *GoogleOauth2Response
+	Client       *http.Client
+	LoginRequest *LoginRequest
 }
 
 type LoginRequest struct {
@@ -301,31 +302,8 @@ func (s *Session) IsTokenExpired() bool {
 }
 
 func (s *Session) TokenRefresh() {
-	var googleRefreshResponse GoogleRefreshResponse
-	err := s.RequestJson(
-		"POST",
-		EndpointRefreshToken,
-		&TypecastRefreshRequest{
-			RefreshToken: s.Token.RefreshToken,
-			Type:         GrantTypeRefresh,
-		},
-		nil,
-		&googleRefreshResponse,
-	)
-
-	if err != nil {
-		return
-	}
-
-	expiresIn, err := strconv.Atoi(googleRefreshResponse.ExpiresIn)
-	if err != nil {
-		return
-	}
-
-	s.Token.ExpiresAt = time.Now().Add(time.Second * time.Duration(expiresIn))
-	s.Token.RefreshToken = googleRefreshResponse.RefreshToken
-	s.Token.IdToken = googleRefreshResponse.IdToken
-	return
+	// @todo refresh api 호출
+	s.Connect(s.LoginRequest)
 }
 
 func (s *Session) TokenHeader() map[string]string {
@@ -422,6 +400,8 @@ func (s *Session) googleOauth2(typecastOauth2Response *TypecastOauth2Response) (
 }
 
 func (s *Session) Connect(loginRequest *LoginRequest) (err error) {
+	s.LoginRequest = loginRequest
+
 	googleOauth2Token, err := s.googleLogin(loginRequest)
 	if err != nil {
 		return
