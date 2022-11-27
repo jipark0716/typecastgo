@@ -445,6 +445,7 @@ func (s *Session) getAudioUrl(speakUrls []string) (audioUrl string, err error) {
 		result := typecastVoiceResponse.Result[0]
 
 		if result.Status == STAUTS_DONE {
+			fmt.Printf("%#v\n", result)
 			audioUrl = EndpointTypecastNoredirect(*(*result.Audio).Url)
 			return
 		}
